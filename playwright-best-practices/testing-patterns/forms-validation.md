@@ -511,7 +511,7 @@ test("confirmation dialog before resetting a dirty form", async ({ page }) => {
 
 ### `fill()` does nothing or clears but doesn't type
 
-**Cause**: The input field uses a contenteditable div (rich text editors), not a real `<input>` or `<textarea>`.
+`fill()` supports `<input>`, `<textarea>`, and `[contenteditable]` elements. If a custom editor depends on individual keyboard events, use `pressSequentially()` instead.
 
 ```typescript
 const isContentEditable = await page
@@ -526,7 +526,7 @@ if (isContentEditable) {
 
 ### Date picker does not accept `fill()` value
 
-**Cause**: Third-party date pickers often render custom UI over a hidden input. `fill()` sets the hidden input but the UI does not update.
+**Cause**: Third-party date pickers may render custom UI over a hidden or read-only input. `fill()` waits for a visible, enabled, editable element; it does not normally fill a hidden input. Interact with the picker UI, or fill a visible editable input if the library supports it.
 
 ```typescript
 await page.getByLabel("Date").click();
